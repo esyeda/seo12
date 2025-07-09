@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Hello is this working?|Auto-deploy is working!'
+    return 'Hello is this working? Auto-deploy is working!'
 
 @app.route("/update_server", methods=['POST'])
 def webhook():
