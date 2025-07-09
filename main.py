@@ -16,25 +16,22 @@ def webhook():
     else:
         return 'Wrong event type', 400
 
-
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '09caa9c3ed2e73dcc19673eb7d14b8d3'
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
 class User(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(20), unique=True, nullable=False)
-  email = db.Column(db.String(120), unique=True, nullable=False)
-  password = db.Column(db.String(60), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
 
-  def __repr__(self):
-    return f"User('{self.username}', '{self.email}')"
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
 
 with app.app_context():
-  db.create_all()
-
+    db.create_all()
 
 @app.route("/")
 @app.route("/home")
@@ -44,15 +41,13 @@ def home():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-    if form.validate_on_submit(): # checks if entries are valid
+    if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home')) # if so - send to home page
-    return render_template('register.html', title='Register', form=form)
-
-    if form.validate_on_submit(): #already in your code file
+        return redirect(url_for('home'))
     user = User(username=form.username.data, email=form.email.data, password=form.password.data)
     db.session.add(user)
     db.session.commit()
+    return render_template('register.html', title='Register', form=form)
 
 @app.route("/second_page")
 def second_page():
